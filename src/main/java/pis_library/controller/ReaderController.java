@@ -1,32 +1,45 @@
 package pis_library.controller;
 
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pis_library.entity.Fee;
 import pis_library.entity.Reader;
 import pis_library.exception.ReaderNotFoundException;
+import pis_library.repository.FeeRepository;
 import pis_library.repository.ReaderRepository;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import pis_library.resourceAssembler.ReaderModelAssembler;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 public class ReaderController {
-    private final ReaderRepository repository;
+    private final ReaderRepository readerRepository;
 
-    ReaderController(ReaderRepository repository) {
-        this.repository = repository;
+    private final ReaderModelAssembler assembler;
+
+    private final FeeRepository feeRepository;
+
+    public ReaderController(
+            ReaderRepository readerRepository,
+            ReaderModelAssembler assembler,
+            FeeRepository feeRepository
+    ) {
+        this.readerRepository = readerRepository;
+        this.assembler = assembler;
+        this.feeRepository = feeRepository;
     }
 
     @GetMapping("/readers")
-    CollectionModel<EntityModel<Reader>> all() {
+    public CollectionModel<EntityModel<Reader>> all() {
 
-        List<EntityModel<Reader>> readers = repository.findAll().stream()
-                .map(reader -> new EntityModel<>(reader,
-                        linkTo(methodOn(ReaderController.class).one(reader.getId())).withSelfRel(),
-                        linkTo(methodOn(ReaderController.class).all()).withRel("readers")))
+        List<EntityModel<Reader>> readers = readerRepository.findAll().stream()
+                .map(assembler::toModel)
                 .collect(Collectors.toList());
 
         return new CollectionModel<>(readers,
@@ -34,36 +47,57 @@ public class ReaderController {
     }
 
     @PostMapping("/readers")
-    Reader newReader(@RequestBody Reader newReader) {
-        return repository.save(newReader);
+    ResponseEntity<?> newReader(@RequestBody Reader newReader) throws URISyntaxException {
+
+        EntityModel<Reader> entityModel = assembler.toModel(readerRepository.save(newReader));
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 
     @GetMapping("/readers/{id}")
-    EntityModel<Reader> one(@PathVariable Long id) {
-        Reader reader =  repository.findById(id)
+    public EntityModel<Reader> one(@PathVariable Long id) {
+        Reader reader =  readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException(id));
 
-        return new EntityModel<>(reader,
-                linkTo(methodOn(ReaderController.class).one(id)).withSelfRel(),
-                linkTo(methodOn(ReaderController.class).all()).withRel("readers"));
+        return assembler.toModel(reader);
     }
 
     @PutMapping("/readers/{id}")
-    Reader replaceReader(@RequestBody Reader newReader, @PathVariable Long id) {
-        return repository.findById(id)
+    ResponseEntity<?> replaceEmployee(@RequestBody Reader newReader, @PathVariable Long id) throws URISyntaxException {
+
+        Reader updatedReader = readerRepository.findById(id)
                 .map(reader -> {
-                    newReader.setName(newReader.getName());
-                    newReader.setSurname(newReader.getSurname());
-                    return repository.save(reader);
+                    reader.setName(newReader.getName());
+                    reader.setSurname(newReader.getSurname());
+                    return readerRepository.save(reader);
                 })
                 .orElseGet(() -> {
                     newReader.setId(id);
-                    return repository.save(newReader);
+                    return readerRepository.save(newReader);
                 });
+
+        EntityModel<Reader> entityModel = assembler.toModel(updatedReader);
+
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 
     @DeleteMapping("/readers/{id}")
-    void deleteReader(@PathVariable Long id) {
-        repository.deleteById(id);
+    ResponseEntity<?> deleteReader(@PathVariable Long id) {
+
+        readerRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/readers/{id}/fee")
+    public List<Fee> fee(@PathVariable Long id) {
+        Reader reader =  readerRepository.findById(id)
+                .orElseThrow(() -> new ReaderNotFoundException(id));
+
+        return reader.getFees();
     }
 }
