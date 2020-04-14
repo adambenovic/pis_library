@@ -35,7 +35,7 @@ public class ReaderController {
         this.feeRepository = feeRepository;
     }
 
-    @GetMapping("/readers")
+    @GetMapping("/api/readers")
     public CollectionModel<EntityModel<Reader>> all() {
 
         List<EntityModel<Reader>> readers = readerRepository.findAll().stream()
@@ -46,7 +46,7 @@ public class ReaderController {
                 linkTo(methodOn(ReaderController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/readers")
+    @PostMapping("/api/readers")
     ResponseEntity<?> newReader(@RequestBody Reader newReader) throws URISyntaxException {
 
         EntityModel<Reader> entityModel = assembler.toModel(readerRepository.save(newReader));
@@ -56,7 +56,7 @@ public class ReaderController {
                 .body(entityModel);
     }
 
-    @GetMapping("/readers/{id}")
+    @GetMapping("/api/readers/{id}")
     public EntityModel<Reader> one(@PathVariable Long id) {
         Reader reader =  readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException(id));
@@ -64,7 +64,7 @@ public class ReaderController {
         return assembler.toModel(reader);
     }
 
-    @PutMapping("/readers/{id}")
+    @PutMapping("/api/readers/{id}")
     ResponseEntity<?> replaceEmployee(@RequestBody Reader newReader, @PathVariable Long id) throws URISyntaxException {
 
         Reader updatedReader = readerRepository.findById(id)
@@ -85,7 +85,7 @@ public class ReaderController {
                 .body(entityModel);
     }
 
-    @DeleteMapping("/readers/{id}")
+    @DeleteMapping("/api/readers/{id}")
     ResponseEntity<?> deleteReader(@PathVariable Long id) {
 
         readerRepository.deleteById(id);
@@ -93,7 +93,7 @@ public class ReaderController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/readers/{id}/fee")
+    @GetMapping("/api/readers/{id}/fee")
     public List<Fee> fee(@PathVariable Long id) {
         Reader reader =  readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException(id));
