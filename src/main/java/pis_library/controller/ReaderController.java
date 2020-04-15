@@ -17,7 +17,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
+@RequestMapping("readers")
 public class ReaderController {
     private final ReaderRepository readerRepository;
 
@@ -35,9 +37,8 @@ public class ReaderController {
         this.feeRepository = feeRepository;
     }
 
-    @GetMapping("/api/readers")
+    @GetMapping
     public CollectionModel<EntityModel<Reader>> all() {
-
         List<EntityModel<Reader>> readers = readerRepository.findAll().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
@@ -46,9 +47,8 @@ public class ReaderController {
                 linkTo(methodOn(ReaderController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/api/readers")
+    @PostMapping
     ResponseEntity<?> newReader(@RequestBody Reader newReader) throws URISyntaxException {
-
         EntityModel<Reader> entityModel = assembler.toModel(readerRepository.save(newReader));
 
         return ResponseEntity
@@ -56,7 +56,7 @@ public class ReaderController {
                 .body(entityModel);
     }
 
-    @GetMapping("/api/readers/{id}")
+    @GetMapping("/{id}")
     public EntityModel<Reader> one(@PathVariable Long id) {
         Reader reader =  readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException(id));
@@ -64,9 +64,8 @@ public class ReaderController {
         return assembler.toModel(reader);
     }
 
-    @PutMapping("/api/readers/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> replaceEmployee(@RequestBody Reader newReader, @PathVariable Long id) throws URISyntaxException {
-
         Reader updatedReader = readerRepository.findById(id)
                 .map(reader -> {
                     reader.setName(newReader.getName());
@@ -85,15 +84,13 @@ public class ReaderController {
                 .body(entityModel);
     }
 
-    @DeleteMapping("/api/readers/{id}")
-    ResponseEntity<?> deleteReader(@PathVariable Long id) {
-
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deleteReader(@PathVariable Long id) throws URISyntaxException {
         readerRepository.deleteById(id);
-
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/api/readers/{id}/fee")
+    @GetMapping("/{id}/fee")
     public List<Fee> fee(@PathVariable Long id) {
         Reader reader =  readerRepository.findById(id)
                 .orElseThrow(() -> new ReaderNotFoundException(id));
