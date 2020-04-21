@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import pis_library.entity.Fee;
 import pis_library.entity.Reader;
 import pis_library.exception.ReaderNotFoundException;
-import pis_library.repository.FeeRepository;
 import pis_library.repository.ReaderRepository;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.CollectionModel;
@@ -17,7 +16,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
 @RestController
 @RequestMapping("readers")
 public class ReaderController {
@@ -25,16 +23,12 @@ public class ReaderController {
 
     private final ReaderModelAssembler assembler;
 
-    private final FeeRepository feeRepository;
-
     public ReaderController(
             ReaderRepository readerRepository,
-            ReaderModelAssembler assembler,
-            FeeRepository feeRepository
+            ReaderModelAssembler assembler
     ) {
         this.readerRepository = readerRepository;
         this.assembler = assembler;
-        this.feeRepository = feeRepository;
     }
 
     @GetMapping

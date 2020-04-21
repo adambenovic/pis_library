@@ -28,6 +28,10 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web-services</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -81,11 +85,17 @@
 					</execution>
 				</executions>
 				<configuration>
-					<generateDirectory>${project.basedir}/src/main/java/soap</generateDirectory>
+					<schemaLanguage>WSDL</schemaLanguage>
+					<generateDirectory>${project.basedir}/src/main/java</generateDirectory>
 					<schemaDirectory>${project.basedir}/src/main/resources/wsdl</schemaDirectory>
 					<schemaIncludes>
 						<include>*.wsdl</include>
 					</schemaIncludes>
+					<schemas>
+						<schema><url>http://pis.predmety.fiit.stuba.sk/pis/ws/Validator?WSDL</url></schema>
+						<schema><url>http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/SMS?WSDL</url></schema>
+						<schema><url>http://pis.predmety.fiit.stuba.sk/pis/ws/NotificationServices/Email?WSDL</url></schema>
+					</schemas>
 				</configuration>
 			</plugin>
 		</plugins>
