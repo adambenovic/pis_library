@@ -3,6 +3,9 @@ package pis_library.request;
 public class ValidateRequestModel {
     private String value;
     private String type;
+    private final String email = "email";
+    private final String phone = "phone";
+    private final String pin = "personal_identification_number";
 
     public String getType() {
         return type;
@@ -22,11 +25,16 @@ public class ValidateRequestModel {
 
     public boolean isEmail()
     {
-        return this.type.equals("email");
+        return this.type.equals(email);
     }
 
     public boolean isPhone()
     {
-        return this.type.equals("phone");
+        return this.type.equals(phone);
+    }
+
+    public boolean isPIN()
+    {
+        return this.type.equals(pin);
     }
 }

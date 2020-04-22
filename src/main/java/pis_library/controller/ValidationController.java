@@ -2,30 +2,30 @@ package pis_library.controller;
 
 import org.springframework.web.bind.annotation.*;
 import pis_library.exception.UnknownTypeException;
+import pis_library.manager.ValidationManager;
 import pis_library.request.ValidateRequestModel;
 import pis_library.response.ValidatelResponseModel;
-import pis_library.soapClient.ValidatorClient;
 
 import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("validation")
 public class ValidationController {
-    private final ValidatorClient validatorClient;
+    private final ValidationManager manager;
 
-    public ValidationController(
-            ValidatorClient validatorClient
-    ) {
-        this.validatorClient = validatorClient;
+    public ValidationController(ValidationManager manager) {
+        this.manager = manager;
     }
 
     @PostMapping
     @ResponseBody
     ValidatelResponseModel validate(@RequestBody ValidateRequestModel payload) throws URISyntaxException {
         if(payload.isEmail())
-            return new ValidatelResponseModel(this.validatorClient.validateEmail(payload.getValue()));
+            return this.manager.validateEmail(payload.getValue());
         if(payload.isPhone())
-            return new ValidatelResponseModel(this.validatorClient.validatePhone(payload.getValue()));
+            return this.manager.validatePhone(payload.getValue());
+        if(payload.isPIN())
+            return this.manager.checkDuplicity(payload.getValue());
 
         throw new UnknownTypeException(payload.getType());
     }
