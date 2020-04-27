@@ -6,6 +6,6 @@ import org.springframework.data.repository.query.Param;
 import pis_library.entity.Reader;
 
 public interface ReaderRepository extends JpaRepository<Reader, Long> {
-    @Query("SELECT true FROM Reader WHERE personal_identification_number = :personal_identification_number")
+    @Query("SELECT case when count(r) > 0 then true else false end FROM Reader r WHERE r.personal_identification_number = :personal_identification_number")
     Boolean findByPIN(@Param("personal_identification_number") String personal_identification_number);
 }

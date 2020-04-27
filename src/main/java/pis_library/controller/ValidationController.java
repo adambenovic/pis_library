@@ -19,7 +19,7 @@ public class ValidationController {
 
     @PostMapping
     @ResponseBody
-    ValidatelResponseModel validate(@RequestBody ValidateRequestModel payload) throws URISyntaxException {
+    public ValidatelResponseModel validate(@RequestBody ValidateRequestModel payload) throws URISyntaxException {
         if(payload.isEmail())
             return this.manager.validateEmail(payload.getValue());
         if(payload.isPhone())
