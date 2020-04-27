@@ -1,6 +1,6 @@
 package pis_library.response;
 
-public class ValidatelResponseModel {
+public class ValidateResponseModel {
     private boolean valid;
 
     public boolean isValid() {
@@ -11,7 +11,7 @@ public class ValidatelResponseModel {
         this.valid = valid;
     }
 
-    public ValidatelResponseModel(boolean valid) {
+    public ValidateResponseModel(boolean valid) {
         this.valid = valid;
     }
 }

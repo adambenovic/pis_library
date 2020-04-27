@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import pis_library.exception.UnknownTypeException;
 import pis_library.manager.ValidationManager;
 import pis_library.request.ValidateRequestModel;
-import pis_library.response.ValidatelResponseModel;
+import pis_library.response.ValidateResponseModel;
 
 import java.net.URISyntaxException;
 
@@ -19,7 +19,7 @@ public class ValidationController {
 
     @PostMapping
     @ResponseBody
-    public ValidatelResponseModel validate(@RequestBody ValidateRequestModel payload) throws URISyntaxException {
+    public ValidateResponseModel validate(@RequestBody ValidateRequestModel payload) throws URISyntaxException {
         if(payload.isEmail())
             return this.manager.validateEmail(payload.getValue());
         if(payload.isPhone())

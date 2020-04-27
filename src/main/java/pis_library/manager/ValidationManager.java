@@ -2,7 +2,7 @@ package pis_library.manager;
 
 import org.springframework.stereotype.Component;
 import pis_library.repository.ReaderRepository;
-import pis_library.response.ValidatelResponseModel;
+import pis_library.response.ValidateResponseModel;
 import pis_library.soapClient.ValidatorClient;
 
 
@@ -21,15 +21,15 @@ public class ValidationManager {
         this.readerRepository = readerRepository;
     }
 
-    public ValidatelResponseModel validateEmail(String email) {
-        return new ValidatelResponseModel(this.validatorClient.validateEmail(email));
+    public ValidateResponseModel validateEmail(String email) {
+        return new ValidateResponseModel(this.validatorClient.validateEmail(email));
     }
 
-    public ValidatelResponseModel validatePhone(String phone) {
-        return new ValidatelResponseModel(this.validatorClient.validatePhone(phone));
+    public ValidateResponseModel validatePhone(String phone) {
+        return new ValidateResponseModel(this.validatorClient.validatePhone(phone));
     }
 
-    public ValidatelResponseModel checkDuplicity(String PIN) {
-        return new ValidatelResponseModel(!this.readerRepository.findByPIN(PIN));
+    public ValidateResponseModel checkDuplicity(String PIN) {
+        return new ValidateResponseModel(!this.readerRepository.findByPIN(PIN));
     }
 }
