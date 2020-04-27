@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pis_library.entity.Fee;
 import pis_library.entity.Reader;
 import pis_library.exception.ReaderNotFoundException;
+import pis_library.manager.FeeManager;
 import pis_library.repository.ReaderRepository;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.CollectionModel;
@@ -23,12 +24,16 @@ public class ReaderController {
 
     private final ReaderModelAssembler assembler;
 
+    private final FeeManager feeManager;
+
     public ReaderController(
             ReaderRepository readerRepository,
-            ReaderModelAssembler assembler
+            ReaderModelAssembler assembler,
+            FeeManager feeManager
     ) {
         this.readerRepository = readerRepository;
         this.assembler = assembler;
+        this.feeManager = feeManager;
     }
 
     @GetMapping
@@ -44,6 +49,7 @@ public class ReaderController {
     @PostMapping
     ResponseEntity<?> newReader(@RequestBody Reader newReader) throws URISyntaxException {
         EntityModel<Reader> entityModel = assembler.toModel(readerRepository.save(newReader));
+        this.feeManager.saveFeeToReader(entityModel.getContent());
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
