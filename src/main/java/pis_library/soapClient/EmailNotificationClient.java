@@ -26,7 +26,6 @@ public class EmailNotificationClient extends WebServiceGatewaySupport {
     public boolean notifyEmail(String email, String subject, String message) {
         ObjectFactory objectFactory = new ObjectFactory();
         Notify request = objectFactory.createNotify();
-        log.info(soapProperties.getTeam());
         request.setTeamId(soapProperties.getTeam());
         request.setPassword(soapProperties.getPassword());
         request.setEmail(email);

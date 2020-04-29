@@ -6,6 +6,7 @@ public class ValidateRequestModel {
     private final String email = "email";
     private final String phone = "phone";
     private final String pin = "personal_identification_number";
+    private final String isic = "isic";
 
     public String getType() {
         return type;
@@ -36,5 +37,10 @@ public class ValidateRequestModel {
     public boolean isPIN()
     {
         return this.type.equals(pin);
+    }
+
+    public boolean isISIC()
+    {
+        return this.type.equals(isic);
     }
 }

@@ -1,5 +1,6 @@
 package pis_library.soapClient;
 
+import localhost._8000.api.ws.isicvalidator.ValidateISICRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -43,6 +44,17 @@ public class ClientConfiguration {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         marshaller.setContextPath(sk.stuba.fiit.predmety.pis.pis.notificationservices.sms.types.Notify.class.getPackageName());
         SMSNotificationClient client = new SMSNotificationClient(soapProperties);
+        client.setMarshaller(marshaller);
+        client.setUnmarshaller(marshaller);
+
+        return client;
+    }
+
+    @Bean
+    public ISICValidatorClient isicValidatorClient() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setContextPath(ValidateISICRequest.class.getPackageName());
+        ISICValidatorClient client = new ISICValidatorClient(soapProperties);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
 

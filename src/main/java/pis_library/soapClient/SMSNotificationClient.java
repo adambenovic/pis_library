@@ -26,7 +26,6 @@ public class SMSNotificationClient extends WebServiceGatewaySupport {
     public boolean notifySMS(String phone, String subject, String message) {
         ObjectFactory objectFactory = new sk.stuba.fiit.predmety.pis.pis.notificationservices.sms.types.ObjectFactory();
         Notify request = objectFactory.createNotify();
-        log.info(soapProperties.getTeam());
         request.setTeamId(soapProperties.getTeam());
         request.setPassword(soapProperties.getPassword());
         request.setPhone(phone);

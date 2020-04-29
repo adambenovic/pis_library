@@ -3,6 +3,7 @@ package pis_library.manager;
 import org.springframework.stereotype.Component;
 import pis_library.repository.ReaderRepository;
 import pis_library.response.ValidateResponseModel;
+import pis_library.soapClient.ISICValidatorClient;
 import pis_library.soapClient.ValidatorClient;
 
 
@@ -13,12 +14,16 @@ public class ValidationManager {
 
     private final ReaderRepository readerRepository;
 
+    private final ISICValidatorClient isicClient;
+
     public ValidationManager(
             ValidatorClient validatorClient,
-            ReaderRepository readerRepository
+            ReaderRepository readerRepository,
+            ISICValidatorClient isicClient
     ) {
         this.validatorClient = validatorClient;
         this.readerRepository = readerRepository;
+        this.isicClient = isicClient;
     }
 
     public ValidateResponseModel validateEmail(String email) {
@@ -31,5 +36,9 @@ public class ValidationManager {
 
     public ValidateResponseModel checkDuplicity(String PIN) {
         return new ValidateResponseModel(!this.readerRepository.findByPIN(PIN));
+    }
+
+    public ValidateResponseModel validateISIC(String isicNUmber) {
+        return new ValidateResponseModel(this.isicClient.validate(isicNUmber));
     }
 }

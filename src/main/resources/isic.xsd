@@ -1,0 +1,20 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8000/api/ws/isicValidator"
+           targetNamespace="http://localhost:8000/api/ws/isicValidator" elementFormDefault="qualified">
+
+    <xs:element name="ValidateISICRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="isic-number" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ValidateISICResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

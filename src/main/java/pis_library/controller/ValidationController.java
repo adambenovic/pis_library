@@ -26,6 +26,8 @@ public class ValidationController {
             return this.manager.validatePhone(payload.getValue());
         if(payload.isPIN())
             return this.manager.checkDuplicity(payload.getValue());
+        if(payload.isISIC())
+            return this.manager.validateISIC(payload.getValue());
 
         throw new UnknownTypeException(payload.getType());
     }
